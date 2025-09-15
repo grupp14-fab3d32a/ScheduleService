@@ -1,6 +1,0 @@
-﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
-################################################################################
-
-/ScheduleService/ScheduleServiceAPI/appsettings.Development.json
-/ScheduleService/ScheduleServiceAPI/appsettings.json

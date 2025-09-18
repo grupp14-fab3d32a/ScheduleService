@@ -8,45 +8,63 @@ namespace ScheduleServiceAPI.Controllers;
 [ApiController]
 public class WorkoutsController(IWorkoutService workoutService) : ControllerBase
 {
-    private readonly IWorkoutService _workoutService = workoutService;
+  private readonly IWorkoutService _workoutService = workoutService;
 
-    #region Create
-    [HttpPost("create")]
-    public async Task<IActionResult> CreateAsync([FromBody] CreateWorkoutRequest request)
+  #region Create
+  [HttpPost("create")]
+  public async Task<IActionResult> CreateAsync([FromBody] CreateWorkoutRequest request)
+  {
+    if (!ModelState.IsValid)
+      return BadRequest(ModelState);
+
+    var result = await _workoutService.CreateWorkoutAsync(request);
+
+    if (!result)
+      return StatusCode(500, new { success = false, message = "Workout could not be created." });
+
+    return Ok(new { success = true });
+  }
+  #endregion
+
+  #region Delete
+  [HttpDelete("{id}")]
+  public async Task<IActionResult> DeleteAsync(string id)
+  {
+    try
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+      var result = await _workoutService.DeleteWorkoutAsync(id);
 
-        var result = await _workoutService.CreateWorkoutAsync(request);
-
-        if(!result)
-            return StatusCode(500, new { success = false, message = "Workout could not be created." });
-
+      if (result == true)
         return Ok(new { success = true });
-    }
-    #endregion
 
-    #region
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteAsync(string id)
+      if (result == false)
+        return NotFound(new { success = false, message = "Workout not found." });
+
+      return StatusCode(500, new { success = false, message = "Server error." });
+
+    }
+    catch (Exception ex)
     {
-        try
-        {
-            var result = await _workoutService.DeleteWorkoutAsync(id);
-
-            if (result == true)
-                return Ok(new { success = true });
-
-            if (result == false)
-                return NotFound(new { success = false, message = "Workout not found." });
-
-            return StatusCode(500, new { success = false, message = "Server error."});
-
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { success = false, message = ex.Message });
-        }
+      return BadRequest(new { success = false, message = ex.Message });
     }
-    #endregion
+  }
+  #endregion
+
+  #region Update (Admin)
+  [HttpPut("update")]
+  public async Task<IActionResult> UpdateAsync([FromBody] UpdateWorkoutRequest update)
+  {
+    if (!ModelState.IsValid)
+      return BadRequest(ModelState);
+
+    if (!await _workoutService.ExistsAsync(update.Id.ToString()))
+      return NotFound(new { success = false, message = "Workout not found." });
+
+    var result = await _workoutService.UpdateAsync(update);
+    if (result == null)
+      return StatusCode(500, new { success = false, message = "Workout could not be updated." });
+
+    return Ok(new { success = true, data = result });
+  }
+  #endregion
 }

@@ -5,7 +5,8 @@ namespace Data.Interfaces;
 
 public interface IWorkoutRepository
 {
-    Task<WorkoutEntity> CreateAsync(WorkoutEntity entity);
-    Task<bool> DeleteAsync(Expression<Func<WorkoutEntity, bool>> expression);
-    Task<bool> ExistsAsync(Expression<Func<WorkoutEntity, bool>> expression);
+  Task<WorkoutEntity> CreateAsync(WorkoutEntity entity);
+  Task<bool> DeleteAsync(Expression<Func<WorkoutEntity, bool>> expression);
+  Task<bool> ExistsAsync(Expression<Func<WorkoutEntity, bool>> expression);
+  Task<WorkoutEntity?> UpdateAsync(WorkoutEntity entity);
 }

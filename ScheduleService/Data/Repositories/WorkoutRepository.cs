@@ -9,12 +9,10 @@ namespace Data.Repositories;
 public class WorkoutRepository : IWorkoutRepository
 {
     protected readonly ScheduleContext _context;
-    protected readonly DbSet<WorkoutEntity> _table;
 
-    public WorkoutRepository(ScheduleContext context, DbSet<WorkoutEntity> table)
+    public WorkoutRepository(ScheduleContext context)
     {
         _context = context;
-        _table = context.Set<WorkoutEntity>();
     }
 
     #region Create
@@ -22,7 +20,7 @@ public class WorkoutRepository : IWorkoutRepository
     {
         if (entity != null)
         {
-            await _table.AddAsync(entity);
+            await _context.Workouts.AddAsync(entity);
             await _context.SaveChangesAsync();
             return entity;
         }
@@ -34,11 +32,11 @@ public class WorkoutRepository : IWorkoutRepository
     #region Delete
     public async Task<bool> DeleteAsync(Expression<Func<WorkoutEntity, bool>> expression)
     {
-        var entityToDelete = await _table.FirstOrDefaultAsync(expression);
+        var entityToDelete = await _context.Workouts.FirstOrDefaultAsync(expression);
 
         if (entityToDelete != null)
         {
-            _table.Remove(entityToDelete);
+            _context.Workouts.Remove(entityToDelete);
             await _context.SaveChangesAsync();
             return true;
         }
@@ -49,6 +47,6 @@ public class WorkoutRepository : IWorkoutRepository
 
     public async Task<bool> ExistsAsync(Expression<Func<WorkoutEntity,bool>> expression)
     {
-        return expression == null ? throw new ArgumentNullException(nameof(expression)) : await _table.AnyAsync(expression);
+        return expression == null ? throw new ArgumentNullException(nameof(expression)) : await _context.Workouts.AnyAsync(expression);
     }
 }

@@ -5,6 +5,6 @@ namespace Data.Contexts;
 
 public class ScheduleContext(DbContextOptions<ScheduleContext> options) : DbContext(options)
 {
-    public DbSet<WorkoutEntity> WorkoutEntities { get; set; }
+    public DbSet<WorkoutEntity> Workouts { get; set; }
 
 }

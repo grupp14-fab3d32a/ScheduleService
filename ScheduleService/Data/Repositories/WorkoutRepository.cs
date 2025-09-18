@@ -17,6 +17,7 @@ public class WorkoutRepository : IWorkoutRepository
         _table = context.Set<WorkoutEntity>();
     }
 
+    #region Create
     public async Task<WorkoutEntity> CreateAsync(WorkoutEntity entity)
     {
         if (entity != null)
@@ -28,6 +29,23 @@ public class WorkoutRepository : IWorkoutRepository
 
         throw new ArgumentNullException(nameof(entity));
     }
+    #endregion
+
+    #region Delete
+    public async Task<bool> DeleteAsync(Expression<Func<WorkoutEntity, bool>> expression)
+    {
+        var entityToDelete = await _table.FirstOrDefaultAsync(expression);
+
+        if (entityToDelete != null)
+        {
+            _table.Remove(entityToDelete);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        return false;
+    }
+    #endregion
 
     public async Task<bool> ExistsAsync(Expression<Func<WorkoutEntity,bool>> expression)
     {

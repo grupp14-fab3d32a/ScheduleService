@@ -58,13 +58,21 @@ public class WorkoutService(IWorkoutRepository workoutRepository) : IWorkoutServ
   #region Update
   public Task<WorkoutResponse?> UpdateAsync(UpdateWorkoutRequest request)
   {
-    var entity = WorkoutFactory.Update(request);
-    var response = _workoutRepository.UpdateAsync(entity);
-    if(response == null)
-      return Task.FromResult<WorkoutResponse?>(null);
+    try
+    {
+      var entity = WorkoutFactory.Update(request);
+      var response = _workoutRepository.UpdateAsync(entity);
+      if (response == null)
+        return Task.FromResult<WorkoutResponse?>(null);
 
-    var result = WorkoutFactory.ToWorkoutResponse(response.Result!);
-    return Task.FromResult<WorkoutResponse?>(result);
+      var result = WorkoutFactory.ToWorkoutResponse(response.Result!);
+      return Task.FromResult<WorkoutResponse?>(result);
+    }
+    catch (Exception ex)
+    {
+      Debug.WriteLine($"Error updating workout: {ex.Message}");
+      return Task.FromResult<WorkoutResponse?>(null);
+    }
   }
   #endregion
 }

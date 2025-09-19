@@ -8,45 +8,54 @@ namespace Data.Repositories;
 
 public class WorkoutRepository : IWorkoutRepository
 {
-    protected readonly ScheduleContext _context;
+  protected readonly ScheduleContext _context;
 
-    public WorkoutRepository(ScheduleContext context)
+  public WorkoutRepository(ScheduleContext context)
+  {
+    _context = context;
+  }
+
+  #region Create
+  public async Task<WorkoutEntity> CreateAsync(WorkoutEntity entity)
+  {
+    if (entity != null)
     {
-        _context = context;
+      await _context.Workouts.AddAsync(entity);
+      await _context.SaveChangesAsync();
+      return entity;
     }
 
-    #region Create
-    public async Task<WorkoutEntity> CreateAsync(WorkoutEntity entity)
+    throw new ArgumentNullException(nameof(entity));
+  }
+  #endregion
+
+  #region Delete
+  public async Task<bool> DeleteAsync(Expression<Func<WorkoutEntity, bool>> expression)
+  {
+    var entityToDelete = await _context.Workouts.FirstOrDefaultAsync(expression);
+
+    if (entityToDelete != null)
     {
-        if (entity != null)
-        {
-            await _context.Workouts.AddAsync(entity);
-            await _context.SaveChangesAsync();
-            return entity;
-        }
-
-        throw new ArgumentNullException(nameof(entity));
+      _context.Workouts.Remove(entityToDelete);
+      await _context.SaveChangesAsync();
+      return true;
     }
-    #endregion
 
-    #region Delete
-    public async Task<bool> DeleteAsync(Expression<Func<WorkoutEntity, bool>> expression)
-    {
-        var entityToDelete = await _context.Workouts.FirstOrDefaultAsync(expression);
+    return false;
+  }
+  #endregion
 
-        if (entityToDelete != null)
-        {
-            _context.Workouts.Remove(entityToDelete);
-            await _context.SaveChangesAsync();
-            return true;
-        }
+  public async Task<bool> ExistsAsync(Expression<Func<WorkoutEntity, bool>> expression)
+  {
+    return expression == null ? throw new ArgumentNullException(nameof(expression)) : await _context.Workouts.AnyAsync(expression);
+  }
 
-        return false;
-    }
-    #endregion
-
-    public async Task<bool> ExistsAsync(Expression<Func<WorkoutEntity,bool>> expression)
-    {
-        return expression == null ? throw new ArgumentNullException(nameof(expression)) : await _context.Workouts.AnyAsync(expression);
-    }
+  #region Update
+  public async Task<WorkoutEntity?> UpdateAsync(WorkoutEntity entity)
+  {
+    _context.Workouts.Update(entity);
+    var updated = await _context.SaveChangesAsync();
+    return updated > 0 ? entity : null;
+  }
+  #endregion
 }

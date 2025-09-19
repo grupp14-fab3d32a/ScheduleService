@@ -26,10 +26,19 @@ public class WorkoutService(IWorkoutRepository workoutRepository) : IWorkoutServ
       return false;
     }
   }
-  #endregion
+    #endregion
 
-  #region Delete
-  public async Task<bool?> DeleteWorkoutAsync(string id)
+    #region Read
+    public async Task<IEnumerable<WorkoutResponse>> GetAllWorkoutsAsync()
+    {
+        var entities = await _workoutRepository.GetAllAsync();
+        var response = entities.Select(WorkoutFactory.ToWorkoutResponse);
+        return response;
+    }
+    #endregion
+
+    #region Delete
+    public async Task<bool?> DeleteWorkoutAsync(string id)
   {
     if (!Guid.TryParse(id, out var guidId))
       throw new ArgumentException("Invalid id", nameof(id));

@@ -24,10 +24,19 @@ public class WorkoutsController(IWorkoutService workoutService) : ControllerBase
 
     return Ok(new { success = true });
   }
-  #endregion
+    #endregion
 
-  #region Delete
-  [HttpDelete("{id}")]
+    #region Read
+    [HttpGet]
+    public async Task<IActionResult> GetAllAsync()
+    {
+        var result = await _workoutService.GetAllWorkoutsAsync();
+        return Ok(result);
+    }
+    #endregion
+
+    #region Delete
+    [HttpDelete("{id}")]
   public async Task<IActionResult> DeleteAsync(string id)
   {
     try

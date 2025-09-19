@@ -27,10 +27,17 @@ public class WorkoutRepository : IWorkoutRepository
 
     throw new ArgumentNullException(nameof(entity));
   }
-  #endregion
+    #endregion
 
-  #region Delete
-  public async Task<bool> DeleteAsync(Expression<Func<WorkoutEntity, bool>> expression)
+    #region Read
+    public async Task<IEnumerable<WorkoutEntity>> GetAllAsync()
+    {
+        return await _context.Workouts.ToListAsync();
+    }
+    #endregion
+
+    #region Delete
+    public async Task<bool> DeleteAsync(Expression<Func<WorkoutEntity, bool>> expression)
   {
     var entityToDelete = await _context.Workouts.FirstOrDefaultAsync(expression);
 

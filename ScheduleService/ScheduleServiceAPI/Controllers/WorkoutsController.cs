@@ -17,18 +17,22 @@ public class WorkoutsController(IWorkoutService workoutService) : ControllerBase
     if (!ModelState.IsValid)
       return BadRequest(ModelState);
 
-    var result = await _workoutService.CreateWorkoutAsync(request);
-
-    if (!result)
-      return StatusCode(500, new { success = false, message = "Workout could not be created." });
-
-    return Ok(new { success = true });
+        try
+        {
+            var result = await _workoutService.CreateWorkoutAsync(request);
+            return Ok(new { success = true, workout = result });
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, new { success = false, message = "Workout could not be created." });
+        }
   }
     #endregion
 
     #region Read
     [HttpGet]
     public async Task<IActionResult> GetAllAsync()
+    
     {
         var result = await _workoutService.GetAllWorkoutsAsync();
         return Ok(result);
@@ -37,24 +41,20 @@ public class WorkoutsController(IWorkoutService workoutService) : ControllerBase
 
     #region Delete
     [HttpDelete("{id}")]
-  public async Task<IActionResult> DeleteAsync(string id)
+  public async Task<IActionResult> DeleteAsync(Guid id)
   {
     try
     {
-      var result = await _workoutService.DeleteWorkoutAsync(id);
+      var deleted = await _workoutService.DeleteWorkoutAsync(id);
 
-      if (result == true)
-        return Ok(new { success = true });
-
-      if (result == false)
+      if (!deleted)
         return NotFound(new { success = false, message = "Workout not found." });
 
-      return StatusCode(500, new { success = false, message = "Server error." });
-
+        return Ok(new { success = true});
     }
-    catch (Exception ex)
+    catch (Exception)
     {
-      return BadRequest(new { success = false, message = ex.Message });
+        return StatusCode(500, new { success = false, message = "Server error." });
     }
   }
   #endregion
@@ -66,12 +66,9 @@ public class WorkoutsController(IWorkoutService workoutService) : ControllerBase
     if (!ModelState.IsValid)
       return BadRequest(ModelState);
 
-    if (!await _workoutService.ExistsAsync(update.Id.ToString()))
-      return NotFound(new { success = false, message = "Workout not found." });
-
     var result = await _workoutService.UpdateAsync(update);
     if (result == null)
-      return StatusCode(500, new { success = false, message = "Workout could not be updated." });
+      return NotFound(new { success = false, message = "Workout not found or could not be updated." });
 
     return Ok(new { success = true, data = result });
   }

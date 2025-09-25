@@ -1,5 +1,4 @@
 ﻿using Business.Contracts.Requests;
-using Business.Contracts.Responses;
 using Data.Entities;
 
 namespace Business.Factories;
@@ -12,19 +11,15 @@ public static class WorkoutFactory
     {
       Id = Guid.NewGuid(),
       Title = request.Title,
-      Description = request.Description,
+      Description = request.Description ?? string.Empty
     };
   }
-  public static WorkoutEntity Update(UpdateWorkoutRequest request) => new()
+
+  public static WorkoutEntity Update(WorkoutEntity existing, UpdateWorkoutRequest request)
   {
-    Id = request.Id,
-    Title = request.Title ?? string.Empty,
-    Description = request.Description,
-  };
-  public static WorkoutResponse ToWorkoutResponse(WorkoutEntity entity) => new()
-  {
-    Id = entity.Id.ToString(),
-    Title = entity.Title,
-    Description = entity.Description
-  };
+    existing.Title = request.Title ?? existing.Title;
+    existing.Description = request.Description ?? existing.Description;
+
+    return existing;
+   }
 }

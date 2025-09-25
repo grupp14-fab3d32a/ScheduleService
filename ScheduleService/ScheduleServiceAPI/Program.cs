@@ -13,7 +13,8 @@ builder.Services.AddOpenApi();
 builder.Services.AddScoped<IWorkoutRepository, WorkoutRepository>();
 builder.Services.AddScoped<IWorkoutService, WorkoutService>();
 
-builder.Services.AddDbContext<ScheduleContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("Database")));
+builder.Services.AddDbContext<ScheduleContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddCors(options =>
 {

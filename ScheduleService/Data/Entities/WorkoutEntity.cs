@@ -14,4 +14,7 @@ public class WorkoutEntity
     [MaxLength(2000)]
     public string? Description { get; set; }
 
+    public int? TotalSpots { get; set; }
+    public int? BookedSpots { get; set; }
+
 }

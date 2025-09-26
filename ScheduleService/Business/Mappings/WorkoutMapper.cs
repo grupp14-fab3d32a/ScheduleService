@@ -9,6 +9,8 @@ public static class WorkoutMapper
     {
         Id = entity.Id,
         Title = entity.Title,
-        Description = entity.Description
+        Description = entity.Description,
+        TotalSpots = entity.TotalSpots,
+        BookedSpots = entity.BookedSpots
     };
 }

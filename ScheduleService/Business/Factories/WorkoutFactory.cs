@@ -11,7 +11,9 @@ public static class WorkoutFactory
     {
       Id = Guid.NewGuid(),
       Title = request.Title,
-      Description = request.Description ?? string.Empty
+      Description = request.Description ?? string.Empty,
+      TotalSpots = request.TotalSpots,
+      BookedSpots = request.BookedSpots
     };
   }
 
@@ -19,7 +21,9 @@ public static class WorkoutFactory
   {
     existing.Title = request.Title ?? existing.Title;
     existing.Description = request.Description ?? existing.Description;
+    existing.TotalSpots = request.TotalSpots ?? existing.TotalSpots;
+    existing.BookedSpots = request.BookedSpots ?? existing.BookedSpots;
 
     return existing;
-   }
+  }
 }

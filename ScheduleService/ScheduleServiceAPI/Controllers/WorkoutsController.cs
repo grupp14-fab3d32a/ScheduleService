@@ -10,12 +10,12 @@ public class WorkoutsController(IWorkoutService workoutService) : ControllerBase
 {
   private readonly IWorkoutService _workoutService = workoutService;
 
-  #region Create
-  [HttpPost("create")]
-  public async Task<IActionResult> CreateAsync([FromBody] CreateWorkoutRequest request)
-  {
+    #region Create
+    [HttpPost("create")]
+    public async Task<IActionResult> CreateAsync([FromBody] CreateWorkoutRequest request)
+    {
     if (!ModelState.IsValid)
-      return BadRequest(ModelState);
+        return BadRequest(ModelState);
 
         try
         {
@@ -26,7 +26,7 @@ public class WorkoutsController(IWorkoutService workoutService) : ControllerBase
         {
             return StatusCode(500, new { success = false, message = "Workout could not be created." });
         }
-  }
+    }
     #endregion
 
     #region Read
@@ -59,18 +59,18 @@ public class WorkoutsController(IWorkoutService workoutService) : ControllerBase
   }
   #endregion
 
-  #region Update (Admin)
-  [HttpPut("update")]
-  public async Task<IActionResult> UpdateAsync([FromBody] UpdateWorkoutRequest update)
-  {
+    #region Update (Admin)
+    [HttpPut("update")]
+    public async Task<IActionResult> UpdateAsync([FromBody] UpdateWorkoutRequest update)
+    {
     if (!ModelState.IsValid)
-      return BadRequest(ModelState);
+        return BadRequest(ModelState);
 
     var result = await _workoutService.UpdateAsync(update);
     if (result == null)
-      return NotFound(new { success = false, message = "Workout not found or could not be updated." });
+        return NotFound(new { success = false, message = "Workout not found or could not be updated." });
 
     return Ok(new { success = true, data = result });
-  }
-  #endregion
+    }
+    #endregion
 }

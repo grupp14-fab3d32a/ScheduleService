@@ -10,4 +10,7 @@ public class CreateWorkoutRequest
 
     [MaxLength(2000, ErrorMessage = "Description cannot exceed 2000 characters.")]
     public string? Description { get; set; }
+
+    public int? TotalSpots { get; set; }
+    public int? BookedSpots { get; set; }
 }

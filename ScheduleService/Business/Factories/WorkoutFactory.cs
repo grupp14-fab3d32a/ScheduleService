@@ -13,7 +13,7 @@ public static class WorkoutFactory
       Title = request.Title,
       Description = request.Description ?? string.Empty,
       TotalSpots = request.TotalSpots,
-      BookedSpots = request.BookedSpots
+      BookedSpots = 0
     };
   }
 

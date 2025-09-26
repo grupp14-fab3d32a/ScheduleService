@@ -5,9 +5,10 @@ namespace Business.Interfaces;
 
 public interface IWorkoutService
 {
-  Task<bool> CreateWorkoutAsync(CreateWorkoutRequest request);
-    Task<IEnumerable<WorkoutResponse>> GetAllWorkoutsAsync();
-  Task<bool?> DeleteWorkoutAsync(string id);
-  Task<bool> ExistsAsync(string id);
+  Task<WorkoutResponse> CreateWorkoutAsync(CreateWorkoutRequest request);
+  Task<WorkoutResponse?> GetWorkoutByIdAsync(Guid id);
+  Task<IEnumerable<WorkoutResponse>> GetAllWorkoutsAsync();
+  Task<bool> DeleteWorkoutAsync(Guid id);
+  Task<bool> ExistsAsync(Guid id);
   Task<WorkoutResponse?> UpdateAsync(UpdateWorkoutRequest request);
 }

@@ -34,6 +34,15 @@ public class WorkoutRepository : IWorkoutRepository
     {
         return await _context.Workouts.ToListAsync();
     }
+    public async Task<bool> ExistsAsync(Expression<Func<WorkoutEntity, bool>> expression)
+    {
+        return expression == null ? throw new ArgumentNullException(nameof(expression)) : await _context.Workouts.AnyAsync(expression);
+    }
+
+    public async Task<WorkoutEntity?> GetByIdAsync(Guid id)
+    {
+        return await _context.Workouts.FindAsync(id);
+    }
     #endregion
 
     #region Delete
@@ -51,11 +60,6 @@ public class WorkoutRepository : IWorkoutRepository
     return false;
   }
   #endregion
-
-  public async Task<bool> ExistsAsync(Expression<Func<WorkoutEntity, bool>> expression)
-  {
-    return expression == null ? throw new ArgumentNullException(nameof(expression)) : await _context.Workouts.AnyAsync(expression);
-  }
 
   #region Update
   public async Task<WorkoutEntity?> UpdateAsync(WorkoutEntity entity)

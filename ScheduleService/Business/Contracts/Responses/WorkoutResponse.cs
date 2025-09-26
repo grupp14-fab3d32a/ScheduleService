@@ -2,7 +2,7 @@
 
 public class WorkoutResponse
 {
-    public string Id { get; set; } = null!;
+    public Guid Id { get; set; }
     public string Title { get; set; } = null!;
     public string? Description { get; set; }
 }

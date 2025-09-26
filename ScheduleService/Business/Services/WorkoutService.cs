@@ -3,6 +3,7 @@ using Business.Contracts.Requests;
 using Business.Contracts.Responses;
 using Business.Factories;
 using Business.Interfaces;
+using Business.Mappings;
 using Data.Interfaces;
 
 namespace Business.Services;
@@ -12,19 +13,12 @@ public class WorkoutService(IWorkoutRepository workoutRepository) : IWorkoutServ
   private readonly IWorkoutRepository _workoutRepository = workoutRepository;
 
   #region Create
-  public async Task<bool> CreateWorkoutAsync(CreateWorkoutRequest request)
+  public async Task<WorkoutResponse> CreateWorkoutAsync(CreateWorkoutRequest request)
   {
-    try
-    {
-      var entity = WorkoutFactory.Create(request);
-      await _workoutRepository.CreateAsync(entity);
-      return true;
-    }
-    catch (Exception ex)
-    {
-      Debug.WriteLine($"Error creating workout: {ex.Message}");
-      return false;
-    }
+     var entity = WorkoutFactory.Create(request);
+     await _workoutRepository.CreateAsync(entity);
+
+     return WorkoutMapper.ToWorkoutResponse(entity);
   }
     #endregion
 
@@ -32,56 +26,45 @@ public class WorkoutService(IWorkoutRepository workoutRepository) : IWorkoutServ
     public async Task<IEnumerable<WorkoutResponse>> GetAllWorkoutsAsync()
     {
         var entities = await _workoutRepository.GetAllAsync();
-        var response = entities.Select(WorkoutFactory.ToWorkoutResponse);
-        return response;
+        return entities.Select(WorkoutMapper.ToWorkoutResponse).ToList();
+    }
+
+    public async Task<WorkoutResponse?> GetWorkoutByIdAsync(Guid id)
+    {
+      var entity = await _workoutRepository.GetByIdAsync(id);
+      if (entity == null)
+        return null;
+
+      return WorkoutMapper.ToWorkoutResponse(entity);
+    }
+
+    public async Task<bool> ExistsAsync(Guid id)
+    {
+        return await _workoutRepository.ExistsAsync(x => x.Id == id);
     }
     #endregion
 
     #region Delete
-    public async Task<bool?> DeleteWorkoutAsync(string id)
+    public async Task<bool> DeleteWorkoutAsync(Guid id)
   {
-    if (!Guid.TryParse(id, out var guidId))
-      throw new ArgumentException("Invalid id", nameof(id));
+     var deleted = await _workoutRepository.DeleteAsync(x => x.Id == id);
 
-    try
-    {
-      return await _workoutRepository.DeleteAsync(x => x.Id == guidId);
+     return deleted;
     }
-    catch (Exception ex)
-    {
-      Debug.WriteLine($"Error deleting workout: {ex.Message}");
-      return null;
-    }
-  }
-  #endregion
-
-  #region Exists
-  public async Task<bool> ExistsAsync(string id)
-  {
-    if (!Guid.TryParse(id, out var guidId))
-      throw new ArgumentException("Invalid id", nameof(id));
-    return await _workoutRepository.ExistsAsync(x => x.Id == guidId);
-  }
   #endregion
 
   #region Update
-  public Task<WorkoutResponse?> UpdateAsync(UpdateWorkoutRequest request)
+  public async Task<WorkoutResponse?> UpdateAsync(UpdateWorkoutRequest request)
   {
-    try
-    {
-      var entity = WorkoutFactory.Update(request);
-      var response = _workoutRepository.UpdateAsync(entity);
-      if (response == null)
-        return Task.FromResult<WorkoutResponse?>(null);
+    var existing = await _workoutRepository.GetByIdAsync(request.Id);
 
-      var result = WorkoutFactory.ToWorkoutResponse(response.Result!);
-      return Task.FromResult<WorkoutResponse?>(result);
+        if (existing == null)
+            return null;
+
+    WorkoutFactory.Update(existing, request);
+    var updatedEntity = await _workoutRepository.UpdateAsync(existing);
+
+    return updatedEntity == null ? null : WorkoutMapper.ToWorkoutResponse(updatedEntity);
     }
-    catch (Exception ex)
-    {
-      Debug.WriteLine($"Error updating workout: {ex.Message}");
-      return Task.FromResult<WorkoutResponse?>(null);
-    }
-  }
   #endregion
 }

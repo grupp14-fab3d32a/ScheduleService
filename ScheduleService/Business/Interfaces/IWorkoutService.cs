@@ -10,5 +10,5 @@ public interface IWorkoutService
   Task<IEnumerable<WorkoutResponse>> GetAllWorkoutsAsync();
   Task<bool> DeleteWorkoutAsync(Guid id);
   Task<bool> ExistsAsync(Guid id);
-  Task<WorkoutResponse?> UpdateAsync(UpdateWorkoutRequest request);
+  Task<WorkoutResponse?> UpdateAsync(Guid Id, UpdateWorkoutRequest request);
 }

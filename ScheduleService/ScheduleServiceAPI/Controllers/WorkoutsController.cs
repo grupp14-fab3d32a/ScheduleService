@@ -40,7 +40,7 @@ public class WorkoutsController(IWorkoutService workoutService) : ControllerBase
     #endregion
 
     #region Delete
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:guid}")]
   public async Task<IActionResult> DeleteAsync(Guid id)
   {
     try
@@ -60,13 +60,16 @@ public class WorkoutsController(IWorkoutService workoutService) : ControllerBase
   #endregion
 
     #region Update (Admin)
-    [HttpPut("update")]
-    public async Task<IActionResult> UpdateAsync([FromBody] UpdateWorkoutRequest update)
+    [HttpPut("id:guid")]
+    public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] UpdateWorkoutRequest update)
     {
-    if (!ModelState.IsValid)
-        return BadRequest(ModelState);
+        if (!ModelState.IsValid)
+            return BadRequest(new { success = false, message = "ID mismatch between URL and payload." });
 
-    var result = await _workoutService.UpdateAsync(update);
+        if (id !=update.Id)
+            return BadRequest("ID mismatch between URL and payload.");
+
+    var result = await _workoutService.UpdateAsync(id, update);
     if (result == null)
         return NotFound(new { success = false, message = "Workout not found or could not be updated." });
 

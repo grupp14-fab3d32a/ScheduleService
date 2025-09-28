@@ -1,5 +1,6 @@
 ﻿using Data.Entities;
 using Data.Interfaces;
+using ScheduleService.Data.Entities;
 using ScheduleService.Data.Interfaces;
 
 namespace ScheduleService.Business.Services
@@ -13,6 +14,6 @@ namespace ScheduleService.Business.Services
             _repo = repo;
         }
 
-        public IEnumerable<GymLocationEntity> GetAll() => _repo.GetAll();
+        public IEnumerable<GymLocation> GetAll() => _repo.GetAll();
     }
 }

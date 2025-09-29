@@ -11,4 +11,6 @@ public interface IWorkoutService
   Task<bool> DeleteWorkoutAsync(Guid id);
   Task<bool> ExistsAsync(Guid id);
   Task<WorkoutResponse?> UpdateAsync(UpdateWorkoutRequest request);
+    Task<WorkoutResponse?> IncrementBookedSpotsAsync(Guid workoutId);
+    Task<WorkoutResponse?> DecrementBookedSpotsAsync(Guid workoutId);
 }

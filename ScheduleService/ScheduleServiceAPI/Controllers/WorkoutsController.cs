@@ -73,4 +73,40 @@ public class WorkoutsController(IWorkoutService workoutService) : ControllerBase
     return Ok(new { success = true, data = result });
     }
     #endregion
+
+    [HttpPost("increment/{id}")]
+    public async Task<IActionResult> IncrementBookedSpots(Guid id)
+    {
+        try
+        {
+            var result = await _workoutService.IncrementBookedSpotsAsync(id);
+            if (result == null)
+                return BadRequest("Could not increment spots.");
+
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { message = ex.Message });
+        }
+
+    }
+
+    [HttpPost("decrement/{id}")]
+    public async Task<IActionResult> DecrementBookedSpots(Guid id)
+    {
+        try
+        {
+            var result = await _workoutService.DecrementBookedSpotsAsync(id);
+            if (result == null)
+                return BadRequest("Could not decrement spots.");
+
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { message = ex.Message });
+        }
+
+    }
 }

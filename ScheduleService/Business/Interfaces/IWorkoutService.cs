@@ -10,6 +10,7 @@ public interface IWorkoutService
   Task<IEnumerable<WorkoutResponse>> GetAllWorkoutsAsync();
   Task<bool> DeleteWorkoutAsync(Guid id);
   Task<bool> ExistsAsync(Guid id);
+    Task<bool?> HasAvailableSpotsAsync(Guid workoutId);
   Task<WorkoutResponse?> UpdateAsync(UpdateWorkoutRequest request);
     Task<WorkoutResponse?> IncrementBookedSpotsAsync(Guid workoutId);
     Task<WorkoutResponse?> DecrementBookedSpotsAsync(Guid workoutId);

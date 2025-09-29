@@ -37,11 +37,6 @@ public class WorkoutService(IWorkoutRepository workoutRepository) : IWorkoutServ
 
       return WorkoutMapper.ToWorkoutResponse(entity);
     }
-
-    public async Task<bool> ExistsAsync(Guid id)
-    {
-        return await _workoutRepository.ExistsAsync(x => x.Id == id);
-    }
     #endregion
 
     #region Delete
@@ -66,7 +61,20 @@ public class WorkoutService(IWorkoutRepository workoutRepository) : IWorkoutServ
 
     return updatedEntity == null ? null : WorkoutMapper.ToWorkoutResponse(updatedEntity);
     }
-  #endregion
+    #endregion
+
+    public async Task<bool> ExistsAsync(Guid id)
+    {
+        return await _workoutRepository.ExistsAsync(x => x.Id == id);
+    }
+
+    public async Task<bool?> HasAvailableSpotsAsync(Guid workoutId)
+    {
+        var workout = await _workoutRepository.GetByIdAsync(workoutId);
+        if (workout == null || workout.TotalSpots == null) return null;
+
+        return (workout.BookedSpots < workout.TotalSpots);
+    }
 
     public async Task<WorkoutResponse?> IncrementBookedSpotsAsync(Guid workoutId)
     {

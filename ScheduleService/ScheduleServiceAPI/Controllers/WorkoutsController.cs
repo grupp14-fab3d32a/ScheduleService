@@ -107,6 +107,16 @@ public class WorkoutsController(IWorkoutService workoutService) : ControllerBase
         {
             return Conflict(new { message = ex.Message });
         }
+    }
+
+    [HttpGet("has-available-spots/{id}")]
+    public async Task<IActionResult> HasAvailableSpots(Guid id)
+    {
+        var result = await _workoutService.HasAvailableSpotsAsync(id);
+        if (result == null)
+            return NotFound($"Workout with id {id} not found.");
+
+        return Ok(result);
 
     }
 }

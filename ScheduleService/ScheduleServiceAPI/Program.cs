@@ -4,6 +4,9 @@ using Data.Contexts;
 using Data.Interfaces;
 using Data.Repositories;
 using Microsoft.EntityFrameworkCore;
+using ScheduleService.Business.Services;
+using ScheduleService.Data.Interfaces;
+using ScheduleService.Data.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +15,9 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddScoped<IWorkoutRepository, WorkoutRepository>();
 builder.Services.AddScoped<IWorkoutService, WorkoutService>();
+builder.Services.AddScoped<IGymLocationRepository, GymLocationRepository>();
+builder.Services.AddScoped<GymLocationService>();
+
 
 builder.Services.AddDbContext<ScheduleContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

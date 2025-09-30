@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ScheduleService.DTOs;
 using ScheduleService.Mappings;
 using ScheduleService.Data.Entities;
+using Business.Contracts.Requests;
 
 namespace ScheduleService.Controllers
 {

@@ -1,5 +1,5 @@
-﻿using ScheduleService.Data.Entities;
-using ScheduleService.DTOs;
+﻿using Business.Contracts.Responses;
+using ScheduleService.Data.Entities;
 
 namespace ScheduleService.Mappings
 {

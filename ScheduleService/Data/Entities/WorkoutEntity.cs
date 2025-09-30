@@ -13,8 +13,18 @@ public class WorkoutEntity
 
     [MaxLength(2000)]
     public string? Description { get; set; }
+    public DateOnly Date { get; set; }
+    public TimeOnly StartTime { get; set; }
 
-    public int? TotalSpots { get; set; }
-    public int? BookedSpots { get; set; }
+    [MaxLength(100)]
+    public string? Instructor { get; set; }
 
+    [MaxLength(100)]
+    public string? Location { get; set; }
+
+    [Range(0, int.MaxValue)]
+    public int TotalSpots { get; set; }
+
+    [Range(0, int.MaxValue)]
+    public int BookedSpots { get; set; }
 }

@@ -24,10 +24,10 @@ jobs:
           dotnet-version: '9.x'
 
       - name: Build with dotnet
-        run: dotnet build ./ScheduleService.sln --configuration Release
+        run: dotnet build ./ScheduleService/ScheduleService.sln --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish ./ScheduleService.sln -c Release -o "${{env.DOTNET_ROOT}}/myapp"
+        run: dotnet publish ./ScheduleService/ScheduleService.sln -c Release -o "${{env.DOTNET_ROOT}}/myapp"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -64,3 +64,4 @@ jobs:
           package: .
 
           
+

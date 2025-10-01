@@ -1,21 +1,23 @@
 ﻿using Business.Contracts.Requests;
 using Business.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ScheduleServiceAPI.Controllers;
 
-[Route("api/[controller]")]
 [ApiController]
+[Route("api/[controller]")]
 public class WorkoutsController(IWorkoutService workoutService) : ControllerBase
 {
-  private readonly IWorkoutService _workoutService = workoutService;
+    private readonly IWorkoutService _workoutService = workoutService;
 
     #region Create
+    [Authorize(Roles = "Admin")]
     [HttpPost("create")]
     public async Task<IActionResult> CreateAsync([FromBody] CreateWorkoutRequest request)
     {
-    if (!ModelState.IsValid)
-        return BadRequest(ModelState);
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
         try
         {
@@ -29,10 +31,10 @@ public class WorkoutsController(IWorkoutService workoutService) : ControllerBase
     }
     #endregion
 
-    #region Read
+    #region Read //All users
     [HttpGet]
     public async Task<IActionResult> GetAllAsync()
-    
+
     {
         var result = await _workoutService.GetAllWorkoutsAsync();
         return Ok(result);
@@ -40,26 +42,28 @@ public class WorkoutsController(IWorkoutService workoutService) : ControllerBase
     #endregion
 
     #region Delete
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:guid}")]
-  public async Task<IActionResult> DeleteAsync(Guid id)
-  {
-    try
+    public async Task<IActionResult> DeleteAsync(Guid id)
     {
-      var deleted = await _workoutService.DeleteWorkoutAsync(id);
+        try
+        {
+            var deleted = await _workoutService.DeleteWorkoutAsync(id);
 
-      if (!deleted)
-        return NotFound(new { success = false, message = "Workout not found." });
+            if (!deleted)
+                return NotFound(new { success = false, message = "Workout not found." });
 
-        return Ok(new { success = true});
+            return Ok(new { success = true });
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, new { success = false, message = "Server error." });
+        }
     }
-    catch (Exception)
-    {
-        return StatusCode(500, new { success = false, message = "Server error." });
-    }
-  }
-  #endregion
+    #endregion
 
-    #region Update (Admin)
+    #region Update
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] UpdateWorkoutRequest update)
     {
@@ -75,7 +79,7 @@ public class WorkoutsController(IWorkoutService workoutService) : ControllerBase
     }
 
     #endregion
-
+    [Authorize(Roles = "Admin, User")]
     [HttpPost("increment/{id}")]
     public async Task<IActionResult> IncrementBookedSpots(Guid id)
     {
@@ -93,7 +97,7 @@ public class WorkoutsController(IWorkoutService workoutService) : ControllerBase
         }
 
     }
-
+    [Authorize(Roles = "Admin, User")]
     [HttpPost("decrement/{id}")]
     public async Task<IActionResult> DecrementBookedSpots(Guid id)
     {
@@ -111,6 +115,7 @@ public class WorkoutsController(IWorkoutService workoutService) : ControllerBase
         }
     }
 
+    [Authorize]
     [HttpGet("has-available-spots/{id}")]
     public async Task<IActionResult> HasAvailableSpots(Guid id)
     {

@@ -60,21 +60,20 @@ public class WorkoutsController(IWorkoutService workoutService) : ControllerBase
   #endregion
 
     #region Update (Admin)
-    [HttpPut("id:guid")]
+    [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] UpdateWorkoutRequest update)
     {
         if (!ModelState.IsValid)
-            return BadRequest(new { success = false, message = "ID mismatch between URL and payload." });
+            return BadRequest(new { success = false, message = "Invalid data provided." });
 
-        if (id !=update.Id)
-            return BadRequest("ID mismatch between URL and payload.");
+        // enforce the URL id
+        var result = await _workoutService.UpdateAsync(id, update);
+        if (result == null)
+            return NotFound(new { success = false, message = "Workout not found or could not be updated." });
 
-    var result = await _workoutService.UpdateAsync(id, update);
-    if (result == null)
-        return NotFound(new { success = false, message = "Workout not found or could not be updated." });
-
-    return Ok(new { success = true, data = result });
+        return Ok(new { success = true, data = result });
     }
+
     #endregion
 
     [HttpPost("increment/{id}")]

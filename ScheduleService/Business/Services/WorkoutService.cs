@@ -51,7 +51,7 @@ public class WorkoutService(IWorkoutRepository workoutRepository) : IWorkoutServ
   #region Update
   public async Task<WorkoutResponse?> UpdateAsync(Guid id, UpdateWorkoutRequest request)
   {
-    var existing = await _workoutRepository.GetByIdAsync(request.Id);
+    var existing = await _workoutRepository.GetByIdAsync(id);
 
         if (existing == null)
             return null;

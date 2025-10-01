@@ -1,4 +1,4 @@
-﻿namespace ScheduleService.DTOs
+﻿namespace Business.Contracts.Responses
 {
     public class GymLocationResponse
     {

@@ -75,4 +75,50 @@ public class WorkoutsController(IWorkoutService workoutService) : ControllerBase
     }
 
     #endregion
+
+    [HttpPost("increment/{id}")]
+    public async Task<IActionResult> IncrementBookedSpots(Guid id)
+    {
+        try
+        {
+            var result = await _workoutService.IncrementBookedSpotsAsync(id);
+            if (result == null)
+                return BadRequest("Could not increment spots.");
+
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { message = ex.Message });
+        }
+
+    }
+
+    [HttpPost("decrement/{id}")]
+    public async Task<IActionResult> DecrementBookedSpots(Guid id)
+    {
+        try
+        {
+            var result = await _workoutService.DecrementBookedSpotsAsync(id);
+            if (result == null)
+                return BadRequest("Could not decrement spots.");
+
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { message = ex.Message });
+        }
+    }
+
+    [HttpGet("has-available-spots/{id}")]
+    public async Task<IActionResult> HasAvailableSpots(Guid id)
+    {
+        var result = await _workoutService.HasAvailableSpotsAsync(id);
+        if (result == null)
+            return NotFound($"Workout with id {id} not found.");
+
+        return Ok(result);
+
+    }
 }

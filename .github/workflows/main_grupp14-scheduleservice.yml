@@ -39,7 +39,7 @@ jobs:
           echo "PATH=$env:PATH" >> $env:GITHUB_ENV
 
       - name: Apply EF Core migrations
-        run: dotnet ef database update --project ./Data/Data.csproj --startup-project ./ScheduleServiceAPI/ScheduleServiceAPI.csproj --context ScheduleContext
+        run: dotnet ef database update --project ./ScheduleService/Data/Data.csproj --startup-project ./ScheduleService/ScheduleServiceAPI/ScheduleServiceAPI.csproj --context ScheduleContext
         env:
           ConnectionStrings__DefaultConnection: ${{ secrets.AZURE_SQL_CONNECTION }}
 
@@ -78,6 +78,7 @@ jobs:
           package: .
 
           
+
 
 
 

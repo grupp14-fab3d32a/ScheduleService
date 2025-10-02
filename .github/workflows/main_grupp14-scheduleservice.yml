@@ -29,6 +29,11 @@ jobs:
       - name: dotnet publish
         run: dotnet publish ./ScheduleService/ScheduleService.sln -c Release -o "${{env.DOTNET_ROOT}}/myapp"
 
+      - name: Apply EF Core migrations
+        run: dotnet ef database update --project ./Data --startup-project ./ScheduleServiceAPI --context ScheduleContext
+        env:
+          ConnectionStrings__DefaultConnection: ${{ secrets.AZURE_SQL_CONNECTION }}
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
@@ -64,4 +69,5 @@ jobs:
           package: .
 
           
+
 

@@ -39,6 +39,15 @@ public class WorkoutsController(IWorkoutService workoutService) : ControllerBase
         var result = await _workoutService.GetAllWorkoutsAsync();
         return Ok(result);
     }
+
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetByIdAsync(Guid id)
+    {
+        var result = await _workoutService.GetWorkoutByIdAsync(id);
+        if (result == null)
+            return NotFound(new { success = false, message = "Workout not found." });
+        return Ok(new { success = true, workout = result });
+    }
     #endregion
 
     #region Delete

@@ -29,6 +29,12 @@ jobs:
       - name: dotnet publish
         run: dotnet publish ./ScheduleService/ScheduleService.sln -c Release -o "${{env.DOTNET_ROOT}}/myapp"
 
+      - name: Install dotnet-ef tool
+        run: dotnet tool install --global dotnet-ef --version 9.0.9
+
+      - name: Add dotnet-ef to PATH
+        run: echo "::add-path::$HOME/.dotnet/tools"
+
       - name: Apply EF Core migrations
         run: dotnet ef database update --project ./Data --startup-project ./ScheduleServiceAPI --context ScheduleContext
         env:
@@ -69,5 +75,6 @@ jobs:
           package: .
 
           
+
 
 

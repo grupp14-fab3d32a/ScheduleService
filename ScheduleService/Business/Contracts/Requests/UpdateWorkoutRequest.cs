@@ -11,6 +11,7 @@ public class UpdateWorkoutRequest
 
     public TimeOnly? StartTime { get; set; }
     public DateOnly? Date { get; set; }
+
     [MaxLength(100, ErrorMessage = "Instructor name cannot exceed 100 characters.")]
     public string? Instructor { get; set; }
 

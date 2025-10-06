@@ -88,7 +88,7 @@ public class WorkoutsController(IWorkoutService workoutService) : ControllerBase
     }
 
     #endregion
-    [Authorize(Roles = "Admin, User")]
+    [Authorize(Roles = "Admin,Member")]
     [HttpPost("increment/{id}")]
     public async Task<IActionResult> IncrementBookedSpots(Guid id)
     {
@@ -106,7 +106,7 @@ public class WorkoutsController(IWorkoutService workoutService) : ControllerBase
         }
 
     }
-    [Authorize(Roles = "Admin, User")]
+    [Authorize(Roles = "Admin,Member")]
     [HttpPost("decrement/{id}")]
     public async Task<IActionResult> DecrementBookedSpots(Guid id)
     {
